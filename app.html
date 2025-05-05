@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,19 +42,28 @@
         <!-- Main Content -->
         <main class="container mx-auto px-4 py-8 flex-grow">
             <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
-                <form id="ebookForm" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2" data-lang="titleLabel">Ebook Title</label>
-                            <input type="text" id="title" required
-                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
-                        </div>
-                        <div>
-                            <label for="author" class="block text-sm font-medium text-gray-700 mb-2" data-lang="authorLabel">Author</label>
-                            <input type="text" id="author" required
-                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
-                        </div>
+            <form id="ebookForm" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2" data-lang="titleLabel">Ebook Title</label>
+                        <input type="text" id="title" required
+                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                     </div>
+                    <div>
+                        <label for="author" class="block text-sm font-medium text-gray-700 mb-2" data-lang="authorLabel">Author</label>
+                        <input type="text" id="author" required
+                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="aiPrompt" class="block text-sm font-medium text-gray-700 mb-2">AI Prompt</label>
+                        <textarea id="aiPrompt" rows="3" placeholder="Enter a prompt to generate ebook content"
+                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
+                        <button type="button" id="generateAIContent" class="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                            Generate Content with AI
+                        </button>
+                        <p id="aiStatus" class="mt-2 text-sm text-gray-600"></p>
+                    </div>
+                </div>
 
                     <div>
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-2" data-lang="descriptionLabel">Description</label>
@@ -107,6 +117,40 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                            <div>
+                                <label for="margin" class="block text-sm font-medium text-gray-700 mb-2">Page Margin (pt)</label>
+                                <input type="number" id="margin" min="10" max="100" value="50" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                            </div>
+                            <div>
+                                <label for="lineHeight" class="block text-sm font-medium text-gray-700 mb-2">Line Height (pt)</label>
+                                <input type="number" id="lineHeight" min="10" max="40" value="18" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                            </div>
+                            <div>
+                                <label for="textAlign" class="block text-sm font-medium text-gray-700 mb-2">Text Alignment</label>
+                                <select id="textAlign" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                    <option value="left">Left</option>
+                                    <option value="center">Center</option>
+                                    <option value="right">Right</option>
+                                    <option value="justify">Justify</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Illustrations</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="illustrationPrompt" class="block text-sm font-medium text-gray-700 mb-2">Illustration Prompt</label>
+                                <input type="text" id="illustrationPrompt" placeholder="Enter prompt for illustration" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                            </div>
+                            <div class="flex items-end">
+                                <button type="button" id="generateIllustration" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                                    Generate Illustration
+                                </button>
+                            </div>
+                        </div>
+                        <div id="illustrationPreview" class="mt-4"></div>
                     </div>
 
                     <div class="flex justify-center pt-6">
@@ -271,8 +315,12 @@
                         pageHeight = 720; // 10 inches * 72 points
                     }
 
+                    // Page margins and line height options
+                    const margin = 50;
+                    const lineHeight = fontSize + 6;
+
                     // Add a page
-                    const page = pdfDoc.addPage([pageWidth, pageHeight]);
+                    let page = pdfDoc.addPage([pageWidth, pageHeight]);
                     const { width, height } = page.getSize();
 
                     // Get form values
@@ -296,8 +344,8 @@
 
                     // Draw title
                     page.drawText(title, {
-                        x: 50,
-                        y: height - 50,
+                        x: margin,
+                        y: height - margin,
                         size: fontSize + 10,
                         font: font,
                         color: rgb(0, 0, 0),
@@ -305,63 +353,67 @@
 
                     // Draw author
                     page.drawText(`${currentLang === 'fr' ? 'Par' : 'By'} ${author}`, {
-                        x: 50,
-                        y: height - 80,
+                        x: margin,
+                        y: height - margin - lineHeight,
                         size: fontSize,
                         font: font,
                         color: rgb(0, 0, 0),
                     });
 
-                    // Draw description
-                    page.drawText(description, {
-                        x: 50,
-                        y: height - 110,
-                        size: fontSize,
-                        font: font,
-                        color: rgb(0, 0, 0),
-                        maxWidth: width - 100,
-                        lineHeight: fontSize + 4,
-                    });
+                    // Draw description with word wrap
+                    const maxWidth = width - 2 * margin;
+                    let yPosition = height - margin - 2 * lineHeight;
+
+                    function drawWrappedText(text, x, y, maxWidth, lineHeight) {
+                        const words = text.split(' ');
+                        let line = '';
+                        let yPos = y;
+
+                        for (let n = 0; n < words.length; n++) {
+                            const testLine = line + words[n] + ' ';
+                            const testLineWidth = font.widthOfTextAtSize(testLine, fontSize);
+                            if (testLineWidth > maxWidth && n > 0) {
+                                page.drawText(line, { x, y: yPos, size: fontSize, font, color: rgb(0, 0, 0) });
+                                line = words[n] + ' ';
+                                yPos -= lineHeight;
+                                if (yPos < margin) {
+                                    page = pdfDoc.addPage([pageWidth, pageHeight]);
+                                    yPos = height - margin;
+                                }
+                            } else {
+                                line = testLine;
+                            }
+                        }
+                        page.drawText(line, { x, y: yPos, size: fontSize, font, color: rgb(0, 0, 0) });
+                        return yPos - lineHeight;
+                    }
+
+                    yPosition = drawWrappedText(description, margin, yPosition, maxWidth, lineHeight);
 
                     // Draw chapters
-                    let yPosition = height - 150;
                     const chapters = document.querySelectorAll('#chapters .chapter-entry');
                     for (const chapter of chapters) {
                         const chapterTitle = chapter.querySelector('input').value;
                         const chapterContent = chapter.querySelector('textarea').value;
 
-                        if (yPosition < 100) {
-                            // Add new page if space is low
+                        if (yPosition < margin + lineHeight * 4) {
                             page = pdfDoc.addPage([pageWidth, pageHeight]);
-                            yPosition = height - 50;
+                            yPosition = height - margin;
                         }
 
+                        // Draw chapter title
                         page.drawText(chapterTitle, {
-                            x: 50,
+                            x: margin,
                             y: yPosition,
                             size: fontSize + 4,
                             font: font,
                             color: rgb(0, 0, 0),
                         });
-                        yPosition -= fontSize + 10;
+                        yPosition -= lineHeight + 4;
 
-                        // Split content into lines for drawing
-                        const lines = chapterContent.split('\n');
-                        for (const line of lines) {
-                            if (yPosition < 50) {
-                                page = pdfDoc.addPage([pageWidth, pageHeight]);
-                                yPosition = height - 50;
-                            }
-                            page.drawText(line, {
-                                x: 60,
-                                y: yPosition,
-                                size: fontSize,
-                                font: font,
-                                color: rgb(0, 0, 0),
-                            });
-                            yPosition -= fontSize + 4;
-                        }
-                        yPosition -= 10;
+                        // Draw chapter content with word wrap
+                        yPosition = drawWrappedText(chapterContent, margin + 10, yPosition, maxWidth - 10, lineHeight);
+                        yPosition -= lineHeight;
                     }
 
                     // Save the PDF
@@ -380,6 +432,90 @@
                 }
             });
         });
-    </script>
-</body>
-</html>
+
+        // AI Content Generation Button Handler
+        document.getElementById('generateAIContent').addEventListener('click', async () => {
+            const prompt = document.getElementById('aiPrompt').value.trim();
+            const aiStatus = document.getElementById('aiStatus');
+            if (!prompt) {
+                aiStatus.textContent = currentLang === 'fr' ? 'Veuillez saisir un prompt.' : 'Please enter a prompt.';
+                return;
+            }
+            aiStatus.textContent = currentLang === 'fr' ? 'Génération en cours...' : 'Generating...';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/generate-text', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt }),
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                if (data.text) {
+                    // Append generated content as a new chapter
+                    const chaptersDiv = document.getElementById('chapters');
+                    const newChapter = document.createElement('div');
+                    newChapter.className = 'chapter-entry flex items-start space-x-4';
+                    newChapter.innerHTML = `
+                        <div class="flex-grow">
+                            <input type="text" placeholder="${translations[currentLang].chapterTitlePlaceholder}" value="AI Generated Chapter"
+                                class="w-full px-4 py-2 border rounded-lg mb-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                            <textarea rows="4" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">${data.text}</textarea>
+                        </div>
+                        <button type="button" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                    chaptersDiv.appendChild(newChapter);
+
+                    // Add delete functionality to new chapter
+                    const deleteButton = newChapter.querySelector('button');
+                    deleteButton.addEventListener('click', () => {
+                        newChapter.remove();
+                    });
+
+                    aiStatus.textContent = currentLang === 'fr' ? 'Contenu généré avec succès.' : 'Content generated successfully.';
+                } else {
+                    aiStatus.textContent = currentLang === 'fr' ? 'Erreur lors de la génération du contenu.' : 'Error generating content.';
+                }
+            } catch (error) {
+                console.error('Error generating AI content:', error);
+                aiStatus.textContent = currentLang === 'fr' ? 'Erreur lors de la génération du contenu.' : 'Error generating content.';
+            }
+        });
+
+        // AI Illustration Generation Button Handler
+        document.getElementById('generateIllustration').addEventListener('click', async () => {
+            const prompt = document.getElementById('illustrationPrompt').value.trim();
+            const illustrationPreview = document.getElementById('illustrationPreview');
+            if (!prompt) {
+                illustrationPreview.textContent = currentLang === 'fr' ? 'Veuillez saisir un prompt pour l\'illustration.' : 'Please enter a prompt for the illustration.';
+                return;
+            }
+            illustrationPreview.textContent = currentLang === 'fr' ? 'Génération de l\'illustration en cours...' : 'Generating illustration...';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/generate-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt }),
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                if (data.imageUrl) {
+                    illustrationPreview.innerHTML = `<img src="${data.imageUrl}" alt="Illustration" class="max-w-full rounded shadow" />`;
+                } else {
+                    illustrationPreview.textContent = currentLang === 'fr' ? 'Erreur lors de la génération de l\'illustration.' : 'Error generating illustration.';
+                }
+            } catch (error) {
+                console.error('Error generating AI illustration:', error);
+                illustrationPreview.textContent = currentLang === 'fr' ? 'Erreur lors de la génération de l\'illustration.' : 'Error generating illustration.';
+            }
+        });
+     </script>
+ </body>
+ </html>
