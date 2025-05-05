@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ebook Generator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Noto Sans for multilingual support -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <!-- PDF-lib library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-6">
+            <div class="container mx-auto px-4 flex justify-between items-center">
+                <h1 class="text-3xl font-bold">Ebook Generator</h1>
+                <nav>
+                    <button id="langToggle" class="bg-indigo-800 px-3 py-1 rounded hover:bg-indigo-700 transition">
+                        FR
+                    </button>
+                    <button id="themeToggle" class="ml-4 bg-indigo-800 px-3 py-1 rounded hover:bg-indigo-700 transition">
+                        Mode Sombre
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8 flex-grow">
+            <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+                <form id="ebookForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="title" class="block text-sm font-medium text-gray-700 mb-2" data-lang="titleLabel">Ebook Title</label>
+                            <input type="text" id="title" required
+                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                        </div>
+                        <div>
+                            <label for="author" class="block text-sm font-medium text-gray-700 mb-2" data-lang="authorLabel">Author</label>
+                            <input type="text" id="author" required
+                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2" data-lang="descriptionLabel">Description</label>
+                        <textarea id="description" rows="4"
+                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2" data-lang="chaptersLabel">Chapters</label>
+                        <div id="chapters" class="space-y-4">
+                            <div class="chapter-entry flex items-start space-x-4">
+                                <div class="flex-grow">
+                                    <input type="text" placeholder="Chapter Title" class="w-full px-4 py-2 border rounded-lg mb-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                                    <textarea placeholder="Chapter Content" rows="4" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
+                                </div>
+                                <button type="button" class="text-red-500 hover:text-red-700">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="button" id="addChapter" class="mt-4 px-4 py-2 text-sm text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-50">
+                            <i class="fas fa-plus mr-2"></i><span data-lang="addChapterBtn">Add Chapter</span>
+                        </button>
+                    </div>
+
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4" data-lang="settingsTitle">Ebook Settings</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label for="format" class="block text-sm font-medium text-gray-700 mb-2" data-lang="formatLabel">Format</label>
+                                <select id="format" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                    <option value="6x9">6" x 9" (KDP Standard)</option>
+                                    <option value="5x8">5" x 8"</option>
+                                    <option value="7x10">7" x 10"</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="font" class="block text-sm font-medium text-gray-700 mb-2" data-lang="fontLabel">Font</label>
+                                <select id="font" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                    <option value="times">Times New Roman</option>
+                                    <option value="arial">Arial</option>
+                                    <option value="georgia">Georgia</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="fontSize" class="block text-sm font-medium text-gray-700 mb-2" data-lang="fontSizeLabel">Font Size</label>
+                                <select id="fontSize" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                    <option value="11">11pt</option>
+                                    <option value="12">12pt</option>
+                                    <option value="14">14pt</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center pt-6">
+                        <button type="submit" id="generatePDF" class="px-8 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            <i class="fas fa-file-pdf mr-2"></i><span data-lang="generateBtn">Generate PDF</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <footer class="bg-gray-800 text-white py-6 mt-12 text-center">
+            <div class="container mx-auto px-4">
+                <p>© 2024 Ebook Generator. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Language translations
+            const translations = {
+                en: {
+                    titleLabel: "Ebook Title",
+                    authorLabel: "Author",
+                    descriptionLabel: "Description",
+                    chaptersLabel: "Chapters",
+                    addChapterBtn: "Add Chapter",
+                    settingsTitle: "Ebook Settings",
+                    formatLabel: "Format",
+                    fontLabel: "Font",
+                    fontSizeLabel: "Font Size",
+                    generateBtn: "Generate PDF",
+                    chapterTitlePlaceholder: "Chapter Title",
+                    chapterContentPlaceholder: "Chapter Content",
+                    langToggleText: "FR",
+                    themeToggleText: "Dark Mode"
+                },
+                fr: {
+                    titleLabel: "Titre de l'Ebook",
+                    authorLabel: "Auteur",
+                    descriptionLabel: "Description",
+                    chaptersLabel: "Chapitres",
+                    addChapterBtn: "Ajouter un chapitre",
+                    settingsTitle: "Paramètres de l'Ebook",
+                    formatLabel: "Format",
+                    fontLabel: "Police",
+                    fontSizeLabel: "Taille de police",
+                    generateBtn: "Générer le PDF",
+                    chapterTitlePlaceholder: "Titre du chapitre",
+                    chapterContentPlaceholder: "Contenu du chapitre",
+                    langToggleText: "EN",
+                    themeToggleText: "Mode Sombre"
+                }
+            };
+
+            let currentLang = 'fr';
+            let darkMode = false;
+
+            const elementsToTranslate = document.querySelectorAll('[data-lang]');
+            const langToggleBtn = document.getElementById('langToggle');
+            const themeToggleBtn = document.getElementById('themeToggle');
+
+            function translatePage(lang) {
+                elementsToTranslate.forEach(el => {
+                    const key = el.getAttribute('data-lang');
+                    if (translations[lang] && translations[lang][key]) {
+                        if (el.tagName.toLowerCase() === 'input' || el.tagName.toLowerCase() === 'textarea') {
+                            el.placeholder = translations[lang][key];
+                        } else {
+                            el.textContent = translations[lang][key];
+                        }
+                    }
+                });
+
+                // Update placeholders for chapter inputs
+                document.querySelectorAll('#chapters .chapter-entry').forEach(chapter => {
+                    const inputs = chapter.querySelectorAll('input, textarea');
+                    if (inputs.length >= 2) {
+                        inputs[0].placeholder = translations[lang].chapterTitlePlaceholder;
+                        inputs[1].placeholder = translations[lang].chapterContentPlaceholder;
+                    }
+                });
+
+                // Update toggle buttons text
+                langToggleBtn.textContent = translations[lang].langToggleText;
+                themeToggleBtn.textContent = translations[lang].themeToggleText;
+            }
+
+            langToggleBtn.addEventListener('click', () => {
+                currentLang = currentLang === 'en' ? 'fr' : 'en';
+                translatePage(currentLang);
+            });
+
+            themeToggleBtn.addEventListener('click', () => {
+                darkMode = !darkMode;
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                    document.body.classList.add('bg-gray-900', 'text-gray-100');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    document.body.classList.remove('bg-gray-900', 'text-gray-100');
+                }
+            });
+
+            translatePage(currentLang);
+
+            // Add Chapter Button
+            document.getElementById('addChapter').addEventListener('click', function() {
+                const chaptersDiv = document.getElementById('chapters');
+                const newChapter = document.createElement('div');
+                newChapter.className = 'chapter-entry flex items-start space-x-4';
+                newChapter.innerHTML = `
+                    <div class="flex-grow">
+                        <input type="text" placeholder="${translations[currentLang].chapterTitlePlaceholder}" 
+                            class="w-full px-4 py-2 border rounded-lg mb-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        <textarea placeholder="${translations[currentLang].chapterContentPlaceholder}" rows="4"
+                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
+                    </div>
+                    <button type="button" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                chaptersDiv.appendChild(newChapter);
+
+                // Add delete functionality to new chapter
+                const deleteButton = newChapter.querySelector('button');
+                deleteButton.addEventListener('click', function() {
+                    newChapter.remove();
+                });
+            });
+
+            // Add delete functionality to initial chapter
+            const deleteButtons = document.querySelectorAll('.chapter-entry button');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.closest('.chapter-entry').remove();
+                });
+            });
+
+            // Form Submit Handler
+            document.getElementById('ebookForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                try {
+                    const { PDFDocument, StandardFonts, rgb } = PDFLib;
+                    const pdfDoc = await PDFDocument.create();
+
+                    // Get selected format for page size
+                    const format = document.getElementById('format').value;
+                    let pageWidth = 595.276; // default A4 width in points
+                    let pageHeight = 841.890; // default A4 height in points
+
+                    if (format === '6x9') {
+                        pageWidth = 432; // 6 inches * 72 points
+                        pageHeight = 648; // 9 inches * 72 points
+                    } else if (format === '5x8') {
+                        pageWidth = 360; // 5 inches * 72 points
+                        pageHeight = 576; // 8 inches * 72 points
+                    } else if (format === '7x10') {
+                        pageWidth = 504; // 7 inches * 72 points
+                        pageHeight = 720; // 10 inches * 72 points
+                    }
+
+                    // Add a page
+                    const page = pdfDoc.addPage([pageWidth, pageHeight]);
+                    const { width, height } = page.getSize();
+
+                    // Get form values
+                    const title = document.getElementById('title').value;
+                    const author = document.getElementById('author').value;
+                    const description = document.getElementById('description').value;
+                    const fontChoice = document.getElementById('font').value;
+                    const fontSize = parseInt(document.getElementById('fontSize').value);
+
+                    // Embed font
+                    let font;
+                    if (fontChoice === 'times') {
+                        font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+                    } else if (fontChoice === 'arial') {
+                        font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+                    } else if (fontChoice === 'georgia') {
+                        font = await pdfDoc.embedFont(StandardFonts.Courier);
+                    } else {
+                        font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+                    }
+
+                    // Draw title
+                    page.drawText(title, {
+                        x: 50,
+                        y: height - 50,
+                        size: fontSize + 10,
+                        font: font,
+                        color: rgb(0, 0, 0),
+                    });
+
+                    // Draw author
+                    page.drawText(`${currentLang === 'fr' ? 'Par' : 'By'} ${author}`, {
+                        x: 50,
+                        y: height - 80,
+                        size: fontSize,
+                        font: font,
+                        color: rgb(0, 0, 0),
+                    });
+
+                    // Draw description
+                    page.drawText(description, {
+                        x: 50,
+                        y: height - 110,
+                        size: fontSize,
+                        font: font,
+                        color: rgb(0, 0, 0),
+                        maxWidth: width - 100,
+                        lineHeight: fontSize + 4,
+                    });
+
+                    // Draw chapters
+                    let yPosition = height - 150;
+                    const chapters = document.querySelectorAll('#chapters .chapter-entry');
+                    for (const chapter of chapters) {
+                        const chapterTitle = chapter.querySelector('input').value;
+                        const chapterContent = chapter.querySelector('textarea').value;
+
+                        if (yPosition < 100) {
+                            // Add new page if space is low
+                            page = pdfDoc.addPage([pageWidth, pageHeight]);
+                            yPosition = height - 50;
+                        }
+
+                        page.drawText(chapterTitle, {
+                            x: 50,
+                            y: yPosition,
+                            size: fontSize + 4,
+                            font: font,
+                            color: rgb(0, 0, 0),
+                        });
+                        yPosition -= fontSize + 10;
+
+                        // Split content into lines for drawing
+                        const lines = chapterContent.split('\n');
+                        for (const line of lines) {
+                            if (yPosition < 50) {
+                                page = pdfDoc.addPage([pageWidth, pageHeight]);
+                                yPosition = height - 50;
+                            }
+                            page.drawText(line, {
+                                x: 60,
+                                y: yPosition,
+                                size: fontSize,
+                                font: font,
+                                color: rgb(0, 0, 0),
+                            });
+                            yPosition -= fontSize + 4;
+                        }
+                        yPosition -= 10;
+                    }
+
+                    // Save the PDF
+                    const pdfBytes = await pdfDoc.save();
+
+                    // Download the PDF
+                    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `${title.replace(/\s+/g, '_')}.pdf`;
+                    link.click();
+                } catch (error) {
+                    console.error('Error generating PDF:', error);
+                    alert(currentLang === 'fr' ? 'Une erreur est survenue lors de la génération du PDF. Veuillez réessayer.' : 'An error occurred while generating the PDF. Please try again.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
