@@ -1,0 +1,15 @@
+{
+  "title": "Générateur d'Ebook",
+  "description": "Générez votre ebook facilement.",
+  "chapters": "Chapitre",
+  "chapters_plural": "Chapitres",
+  "addChapterBtn": "Ajouter un chapitre",
+  "generateBtn": "Générer le PDF",
+  "previewTitle": "Aperçu de l'Ebook",
+  "dateFormat": {
+    "short": { "year": "numeric", "month": "short", "day": "numeric" }
+  },
+  "welcome": "Bienvenue, {{name}} !",
+  "itemsCount": "Vous avez {{count}} article.",
+  "itemsCount_plural": "Vous avez {{count}} articles."
+}

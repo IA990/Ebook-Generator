@@ -1,0 +1,15 @@
+{
+  "title": "Ebook Generator",
+  "description": "Generate your ebook easily.",
+  "chapters": "Chapter",
+  "chapters_plural": "Chapters",
+  "addChapterBtn": "Add Chapter",
+  "generateBtn": "Generate PDF",
+  "previewTitle": "Ebook Preview",
+  "dateFormat": {
+    "short": { "year": "numeric", "month": "short", "day": "numeric" }
+  },
+  "welcome": "Welcome, {{name}}!",
+  "itemsCount": "You have {{count}} item.",
+  "itemsCount_plural": "You have {{count}} items."
+}

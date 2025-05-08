@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,14 +26,14 @@
 <body class="bg-gray-50 text-gray-900">
     <div class="min-h-screen flex flex-col">
         <!-- Header -->
-        <header class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-6">
+        <header class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-6" role="banner">
             <div class="container mx-auto px-4 flex justify-between items-center">
-                <h1 class="text-3xl font-bold">Ebook Generator</h1>
-                <nav>
-                    <button id="langToggle" class="bg-indigo-800 px-3 py-1 rounded hover:bg-indigo-700 transition">
+                <h1 class="text-3xl font-bold" tabindex="0">Ebook Generator</h1>
+                <nav aria-label="Primary navigation">
+                    <button id="langToggle" class="bg-indigo-800 px-3 py-1 rounded hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500" aria-pressed="false" aria-label="Toggle language">
                         FR
                     </button>
-                    <button id="themeToggle" class="ml-4 bg-indigo-800 px-3 py-1 rounded hover:bg-indigo-700 transition">
+                    <button id="themeToggle" class="ml-4 bg-indigo-800 px-3 py-1 rounded hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500" aria-pressed="false" aria-label="Toggle dark mode">
                         Mode Sombre
                     </button>
                 </nav>
@@ -43,27 +44,31 @@
         <main class="container mx-auto px-4 py-8 flex-grow">
             <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
             <form id="ebookForm" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2" data-lang="titleLabel">Ebook Title</label>
-                        <input type="text" id="title" required
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
-                    </div>
-                    <div>
-                        <label for="author" class="block text-sm font-medium text-gray-700 mb-2" data-lang="authorLabel">Author</label>
-                        <input type="text" id="author" required
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
-                    </div>
-                    <div class="md:col-span-2">
-                        <label for="aiPrompt" class="block text-sm font-medium text-gray-700 mb-2">AI Prompt</label>
-                        <textarea id="aiPrompt" rows="3" placeholder="Enter a prompt to generate ebook content"
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
-                        <button type="button" id="generateAIContent" class="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
-                            Generate Content with AI
-                        </button>
-                        <p id="aiStatus" class="mt-2 text-sm text-gray-600"></p>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="md:col-span-2 relative">
+                    <label for="aiPrompt" class="block text-sm font-medium text-gray-700 mb-2">AI Prompt</label>
+                    <textarea id="aiPrompt" rows="3" placeholder="Enter a prompt to generate ebook content"
+                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
+                    <button type="button" id="generateAIContent" class="mt-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 relative flex items-center justify-center transition duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <svg id="loadingSpinner" class="animate-spin h-5 w-5 mr-2 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                        </svg>
+                        Generate Content with AI
+                    </button>
+                    <p id="aiStatus" class="mt-2 text-sm text-gray-600"></p>
                 </div>
+                <div>
+                    <label for="title" class="block text-sm font-medium text-gray-700 mb-2" data-lang="titleLabel">Ebook Title</label>
+                    <input type="text" id="title" required
+                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                </div>
+                <div>
+                    <label for="author" class="block text-sm font-medium text-gray-700 mb-2" data-lang="authorLabel">Author</label>
+                    <input type="text" id="author" required
+                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                </div>
+            </div>
 
                     <div>
                         <label for="description" class="block text-sm font-medium text-gray-700 mb-2" data-lang="descriptionLabel">Description</label>
@@ -91,32 +96,42 @@
 
                     <div class="border-t pt-6">
                         <h3 class="text-lg font-medium text-gray-900 mb-4" data-lang="settingsTitle">Ebook Settings</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div>
-                                <label for="format" class="block text-sm font-medium text-gray-700 mb-2" data-lang="formatLabel">Format</label>
-                                <select id="format" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                                    <option value="6x9">6" x 9" (KDP Standard)</option>
-                                    <option value="5x8">5" x 8"</option>
-                                    <option value="7x10">7" x 10"</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="font" class="block text-sm font-medium text-gray-700 mb-2" data-lang="fontLabel">Font</label>
-                                <select id="font" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                                    <option value="times">Times New Roman</option>
-                                    <option value="arial">Arial</option>
-                                    <option value="georgia">Georgia</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="fontSize" class="block text-sm font-medium text-gray-700 mb-2" data-lang="fontSizeLabel">Font Size</label>
-                                <select id="fontSize" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-                                    <option value="11">11pt</option>
-                                    <option value="12">12pt</option>
-                                    <option value="14">14pt</option>
-                                </select>
-                            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="format" class="block text-sm font-medium text-gray-700 mb-2" data-lang="formatLabel">Format</label>
+                            <select id="format" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                <option value="6x9">6" x 9" (KDP Standard)</option>
+                                <option value="5x8">5" x 8"</option>
+                                <option value="7x10">7" x 10"</option>
+                            </select>
                         </div>
+                        <div>
+                            <label for="font" class="block text-sm font-medium text-gray-700 mb-2" data-lang="fontLabel">Font</label>
+                            <select id="font" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                <option value="times">Times New Roman</option>
+                                <option value="arial">Arial</option>
+                                <option value="georgia">Georgia</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="fontSize" class="block text-sm font-medium text-gray-700 mb-2" data-lang="fontSizeLabel">Font Size</label>
+                            <select id="fontSize" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                <option value="11">11pt</option>
+                                <option value="12">12pt</option>
+                                <option value="14">14pt</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-3 mt-6">
+                            <label for="ebookType" class="block text-sm font-medium text-gray-700 mb-2">Ebook Type</label>
+                            <select id="ebookType" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                <option value="standard">Standard Ebook</option>
+                                <option value="coloring">Coloring Book</option>
+                                <option value="planner">Planner</option>
+                                <option value="journal">Journal</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
                             <div>
                                 <label for="margin" class="block text-sm font-medium text-gray-700 mb-2">Page Margin (pt)</label>
@@ -133,6 +148,16 @@
                                     <option value="center">Center</option>
                                     <option value="right">Right</option>
                                     <option value="justify">Justify</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="pageCount" class="block text-sm font-medium text-gray-700 mb-2">Number of Pages</label>
+                                <select id="pageCount" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                    <option value="10">10 pages</option>
+                                    <option value="20">20 pages</option>
+                                    <option value="30">30 pages</option>
+                                    <option value="40">40 pages</option>
+                                    <option value="50">50 pages</option>
                                 </select>
                             </div>
                         </div>
@@ -158,18 +183,144 @@
                             <i class="fas fa-file-pdf mr-2"></i><span data-lang="generateBtn">Generate PDF</span>
                         </button>
                     </div>
-                </form>
-            </div>
-        </main>
+            </form>
 
-        <footer class="bg-gray-800 text-white py-6 mt-12 text-center">
-            <div class="container mx-auto px-4">
-                <p>© 2024 Ebook Generator. All rights reserved.</p>
+            <!-- Interactive Preview Section -->
+            <div class="mt-8 border rounded-lg p-4 bg-gray-100 dark:bg-gray-800">
+                <h2 class="text-xl font-semibold mb-4" data-lang="previewTitle">Ebook Preview</h2>
+                <div class="flex items-center space-x-4 mb-2">
+                    <label for="zoomRange" class="text-sm font-medium text-gray-700 dark:text-gray-300">Zoom:</label>
+                    <input type="range" id="zoomRange" min="50" max="150" value="100" class="w-48" />
+                    <span id="zoomValue" class="text-sm text-gray-700 dark:text-gray-300">100%</span>
+                </div>
+                <iframe id="previewIframe" sandbox="allow-same-origin allow-scripts" class="w-full h-96 border rounded" style="transform-origin: top left;"></iframe>
+                <p id="previewError" class="mt-2 text-red-600 dark:text-red-400 hidden"></p>
             </div>
-        </footer>
-    </div>
+        </div>
+    </main>
 
-    <script>
+    <footer class="bg-gray-800 text-white py-6 mt-12 text-center">
+        <div class="container mx-auto px-4">
+            <p>© 2024 Ebook Generator. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+        // Interactive Preview Script
+        (function() {
+            const previewIframe = document.getElementById('previewIframe');
+            const zoomRange = document.getElementById('zoomRange');
+            const zoomValue = document.getElementById('zoomValue');
+            const previewError = document.getElementById('previewError');
+
+            // Function to generate preview HTML content
+            function generatePreviewContent() {
+                try {
+                    const title = document.getElementById('title').value;
+                    const author = document.getElementById('author').value;
+                    const description = document.getElementById('description').value;
+                    const font = document.getElementById('font').value;
+                    const fontSize = document.getElementById('fontSize').value;
+                    const margin = document.getElementById('margin').value;
+                    const lineHeight = document.getElementById('lineHeight').value;
+                    const textAlign = document.getElementById('textAlign').value;
+                    const chaptersEls = document.querySelectorAll('#chapters .chapter-entry');
+
+                    // Build chapters HTML
+                    let chaptersHTML = '';
+                    chaptersEls.forEach(chapterEl => {
+                        const chapterTitle = chapterEl.querySelector('input').value;
+                        const chapterContent = chapterEl.querySelector('textarea').value;
+                        chaptersHTML += `
+                            <section class="chapter mb-6">
+                                <h3 class="chapter-title">${chapterTitle}</h3>
+                                <p class="chapter-content">${chapterContent.replace(/\n/g, '<br>')}</p>
+                            </section>
+                        `;
+                    });
+
+                    // Compose full HTML
+                    const html = `
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8" />
+                            <meta name="viewport" content="width=device-width, initial-scale=1" />
+                            <title>Preview - ${title}</title>
+                            <style>
+                                body {
+                                    font-family: ${font}, sans-serif;
+                                    font-size: ${fontSize}px;
+                                    margin: ${margin}px;
+                                    line-height: ${lineHeight}px;
+                                    text-align: ${textAlign};
+                                    background-color: white;
+                                    color: black;
+                                    padding: 1rem;
+                                }
+                                .chapter-title {
+                                    font-weight: bold;
+                                    font-size: calc(${fontSize}px + 4px);
+                                    margin-bottom: 0.5rem;
+                                }
+                                .chapter-content {
+                                    white-space: pre-wrap;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>${title}</h1>
+                            <h2>${author}</h2>
+                            <p>${description.replace(/\n/g, '<br>')}</p>
+                            ${chaptersHTML}
+                        </body>
+                        </html>
+                    `;
+                    previewError.classList.add('hidden');
+                    return html;
+                } catch (err) {
+                    previewError.textContent = 'Error generating preview: ' + err.message;
+                    previewError.classList.remove('hidden');
+                    return '<p>Error generating preview.</p>';
+                }
+            }
+
+            // Function to update iframe content
+            function updatePreview() {
+                const html = generatePreviewContent();
+                const iframeDoc = previewIframe.contentDocument || previewIframe.contentWindow.document;
+                iframeDoc.open();
+                iframeDoc.write(html);
+                iframeDoc.close();
+            }
+
+            // Zoom control
+            zoomRange.addEventListener('input', () => {
+                const zoomPercent = zoomRange.value;
+                zoomValue.textContent = zoomPercent + '%';
+                previewIframe.style.transform = `scale(${zoomPercent / 100})`;
+                previewIframe.style.height = `${384 * (100 / zoomPercent)}px`; // Adjust height inversely
+            });
+
+            // Update preview on input changes
+            const inputsToWatch = [
+                'title', 'author', 'description', 'font', 'fontSize', 'margin', 'lineHeight', 'textAlign', 'chapters'
+            ];
+
+            inputsToWatch.forEach(id => {
+                if (id === 'chapters') {
+                    document.getElementById('chapters').addEventListener('input', updatePreview);
+                } else {
+                    const el = document.getElementById(id);
+                    if (el) el.addEventListener('input', updatePreview);
+                }
+            });
+
+            // Initial preview render
+            updatePreview();
+        })();
+
         document.addEventListener('DOMContentLoaded', function() {
             // Language translations
             const translations = {
@@ -292,230 +443,194 @@
             });
 
             // Form Submit Handler
-            document.getElementById('ebookForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
+        // Refactored to use Web Worker for PDF generation
 
-                try {
-                    const { PDFDocument, StandardFonts, rgb } = PDFLib;
-                    const pdfDoc = await PDFDocument.create();
+        document.getElementById('ebookForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
-                    // Get selected format for page size
-                    const format = document.getElementById('format').value;
-                    let pageWidth = 595.276; // default A4 width in points
-                    let pageHeight = 841.890; // default A4 height in points
+            const worker = new Worker('pdfWorker.js');
 
-                    if (format === '6x9') {
-                        pageWidth = 432; // 6 inches * 72 points
-                        pageHeight = 648; // 9 inches * 72 points
-                    } else if (format === '5x8') {
-                        pageWidth = 360; // 5 inches * 72 points
-                        pageHeight = 576; // 8 inches * 72 points
-                    } else if (format === '7x10') {
-                        pageWidth = 504; // 7 inches * 72 points
-                        pageHeight = 720; // 10 inches * 72 points
-                    }
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const description = document.getElementById('description').value;
+            const fontChoice = document.getElementById('font').value;
+            const fontSize = parseInt(document.getElementById('fontSize').value);
+            const format = document.getElementById('format').value;
+            const margin = parseInt(document.getElementById('margin').value);
+            const lineHeight = parseInt(document.getElementById('lineHeight').value);
+            const textAlign = document.getElementById('textAlign').value;
+            const pageCount = parseInt(document.getElementById('pageCount').value);
+            const ebookType = document.getElementById('ebookType').value;
 
-                    // Page margins and line height options
-                    const margin = 50;
-                    const lineHeight = fontSize + 6;
+            // Gather chapters data
+            const chaptersElements = document.querySelectorAll('#chapters .chapter-entry');
+            const chapters = [];
+            chaptersElements.forEach(chapterEl => {
+                const titleInput = chapterEl.querySelector('input');
+                const contentTextarea = chapterEl.querySelector('textarea');
+                chapters.push({
+                    title: titleInput ? titleInput.value : '',
+                    content: contentTextarea ? contentTextarea.value : ''
+                });
+            });
 
-                    // Add a page
-                    let page = pdfDoc.addPage([pageWidth, pageHeight]);
-                    const { width, height } = page.getSize();
+            // Send data to worker
+            worker.postMessage({
+                title,
+                author,
+                description,
+                font: fontChoice,
+                fontSize,
+                format,
+                margin,
+                lineHeight,
+                textAlign,
+                pageCount,
+                ebookType,
+                chapters,
+                currentLang
+            });
 
-                    // Get form values
-                    const title = document.getElementById('title').value;
-                    const author = document.getElementById('author').value;
-                    const description = document.getElementById('description').value;
-                    const fontChoice = document.getElementById('font').value;
-                    const fontSize = parseInt(document.getElementById('fontSize').value);
-
-                    // Embed font
-                    let font;
-                    if (fontChoice === 'times') {
-                        font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-                    } else if (fontChoice === 'arial') {
-                        font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-                    } else if (fontChoice === 'georgia') {
-                        font = await pdfDoc.embedFont(StandardFonts.Courier);
-                    } else {
-                        font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-                    }
-
-                    // Draw title
-                    page.drawText(title, {
-                        x: margin,
-                        y: height - margin,
-                        size: fontSize + 10,
-                        font: font,
-                        color: rgb(0, 0, 0),
-                    });
-
-                    // Draw author
-                    page.drawText(`${currentLang === 'fr' ? 'Par' : 'By'} ${author}`, {
-                        x: margin,
-                        y: height - margin - lineHeight,
-                        size: fontSize,
-                        font: font,
-                        color: rgb(0, 0, 0),
-                    });
-
-                    // Draw description with word wrap
-                    const maxWidth = width - 2 * margin;
-                    let yPosition = height - margin - 2 * lineHeight;
-
-                    function drawWrappedText(text, x, y, maxWidth, lineHeight) {
-                        const words = text.split(' ');
-                        let line = '';
-                        let yPos = y;
-
-                        for (let n = 0; n < words.length; n++) {
-                            const testLine = line + words[n] + ' ';
-                            const testLineWidth = font.widthOfTextAtSize(testLine, fontSize);
-                            if (testLineWidth > maxWidth && n > 0) {
-                                page.drawText(line, { x, y: yPos, size: fontSize, font, color: rgb(0, 0, 0) });
-                                line = words[n] + ' ';
-                                yPos -= lineHeight;
-                                if (yPos < margin) {
-                                    page = pdfDoc.addPage([pageWidth, pageHeight]);
-                                    yPos = height - margin;
-                                }
-                            } else {
-                                line = testLine;
-                            }
-                        }
-                        page.drawText(line, { x, y: yPos, size: fontSize, font, color: rgb(0, 0, 0) });
-                        return yPos - lineHeight;
-                    }
-
-                    yPosition = drawWrappedText(description, margin, yPosition, maxWidth, lineHeight);
-
-                    // Draw chapters
-                    const chapters = document.querySelectorAll('#chapters .chapter-entry');
-                    for (const chapter of chapters) {
-                        const chapterTitle = chapter.querySelector('input').value;
-                        const chapterContent = chapter.querySelector('textarea').value;
-
-                        if (yPosition < margin + lineHeight * 4) {
-                            page = pdfDoc.addPage([pageWidth, pageHeight]);
-                            yPosition = height - margin;
-                        }
-
-                        // Draw chapter title
-                        page.drawText(chapterTitle, {
-                            x: margin,
-                            y: yPosition,
-                            size: fontSize + 4,
-                            font: font,
-                            color: rgb(0, 0, 0),
-                        });
-                        yPosition -= lineHeight + 4;
-
-                        // Draw chapter content with word wrap
-                        yPosition = drawWrappedText(chapterContent, margin + 10, yPosition, maxWidth - 10, lineHeight);
-                        yPosition -= lineHeight;
-                    }
-
-                    // Save the PDF
-                    const pdfBytes = await pdfDoc.save();
-
-                    // Download the PDF
+            worker.onmessage = function(event) {
+                const { success, pdfBytes, error } = event.data;
+                if (success) {
                     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
                     const url = window.URL.createObjectURL(blob);
                     const link = document.createElement('a');
                     link.href = url;
                     link.download = `${title.replace(/\s+/g, '_')}.pdf`;
                     link.click();
-                } catch (error) {
-                    console.error('Error generating PDF:', error);
+                } else {
+                    console.error('PDF generation error:', error);
                     alert(currentLang === 'fr' ? 'Une erreur est survenue lors de la génération du PDF. Veuillez réessayer.' : 'An error occurred while generating the PDF. Please try again.');
                 }
-            });
+                worker.terminate();
+            };
+        });
         });
 
         // AI Content Generation Button Handler
-        document.getElementById('generateAIContent').addEventListener('click', async () => {
+        async function generateContentAndIllustration() {
             const prompt = document.getElementById('aiPrompt').value.trim();
             const aiStatus = document.getElementById('aiStatus');
+            const illustrationPreview = document.getElementById('illustrationPreview');
+
             if (!prompt) {
                 aiStatus.textContent = currentLang === 'fr' ? 'Veuillez saisir un prompt.' : 'Please enter a prompt.';
                 return;
             }
             aiStatus.textContent = currentLang === 'fr' ? 'Génération en cours...' : 'Generating...';
+            illustrationPreview.textContent = '';
 
             try {
-                const response = await fetch('http://localhost:3000/api/generate-text', {
+                // Generate ebook content
+                const contentResponse = await fetch('http://localhost:3000/api/generate-text', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ prompt }),
                 });
-                if (!response.ok) {
+                if (!contentResponse.ok) {
                     throw new Error('Network response was not ok');
                 }
-                const data = await response.json();
-                if (data.text) {
-                    // Append generated content as a new chapter
-                    const chaptersDiv = document.getElementById('chapters');
-                    const newChapter = document.createElement('div');
-                    newChapter.className = 'chapter-entry flex items-start space-x-4';
-                    newChapter.innerHTML = `
-                        <div class="flex-grow">
-                            <input type="text" placeholder="${translations[currentLang].chapterTitlePlaceholder}" value="AI Generated Chapter"
-                                class="w-full px-4 py-2 border rounded-lg mb-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
-                            <textarea rows="4" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">${data.text}</textarea>
-                        </div>
-                        <button type="button" class="text-red-500 hover:text-red-700">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    `;
-                    chaptersDiv.appendChild(newChapter);
+                const data = await contentResponse.json();
 
-                    // Add delete functionality to new chapter
-                    const deleteButton = newChapter.querySelector('button');
-                    deleteButton.addEventListener('click', () => {
-                        newChapter.remove();
+                // Clear existing chapters
+                const chaptersDiv = document.getElementById('chapters');
+                chaptersDiv.innerHTML = '';
+
+                // Fill form fields with generated data
+                if (data.title) {
+                    document.getElementById('title').value = data.title;
+                }
+                if (data.author) {
+                    document.getElementById('author').value = data.author;
+                }
+                if (data.description) {
+                    document.getElementById('description').value = data.description;
+                }
+                if (data.settings) {
+                    if (data.settings.format) {
+                        document.getElementById('format').value = data.settings.format;
+                    }
+                    if (data.settings.font) {
+                        document.getElementById('font').value = data.settings.font;
+                    }
+                    if (data.settings.fontSize) {
+                        document.getElementById('fontSize').value = data.settings.fontSize;
+                    }
+                    if (data.settings.ebookType) {
+                        document.getElementById('ebookType').value = data.settings.ebookType;
+                    }
+                    if (data.settings.margin) {
+                        document.getElementById('margin').value = data.settings.margin;
+                    }
+                    if (data.settings.lineHeight) {
+                        document.getElementById('lineHeight').value = data.settings.lineHeight;
+                    }
+                    if (data.settings.textAlign) {
+                        document.getElementById('textAlign').value = data.settings.textAlign;
+                    }
+                    if (data.settings.pageCount) {
+                        document.getElementById('pageCount').value = data.settings.pageCount;
+                    }
+                }
+
+                // Add chapters
+                if (Array.isArray(data.chapters)) {
+                    data.chapters.forEach(chapter => {
+                        const newChapter = document.createElement('div');
+                        newChapter.className = 'chapter-entry flex items-start space-x-4';
+                        newChapter.innerHTML = `
+                            <div class="flex-grow">
+                                <input type="text" placeholder="${translations[currentLang].chapterTitlePlaceholder}" value="${chapter.title || ''}"
+                                    class="w-full px-4 py-2 border rounded-lg mb-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                                <textarea rows="4" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">${chapter.content || ''}</textarea>
+                            </div>
+                            <button type="button" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        `;
+                        chaptersDiv.appendChild(newChapter);
+
+                        // Add delete functionality to new chapter
+                        const deleteButton = newChapter.querySelector('button');
+                        deleteButton.addEventListener('click', () => {
+                            newChapter.remove();
+                        });
                     });
+                }
 
-                    aiStatus.textContent = currentLang === 'fr' ? 'Contenu généré avec succès.' : 'Content generated successfully.';
+                aiStatus.textContent = currentLang === 'fr' ? 'Contenu généré avec succès.' : 'Content generated successfully.';
+
+                // Generate illustration
+                const illustrationPrompt = document.getElementById('illustrationPrompt').value.trim();
+                if (illustrationPrompt) {
+                    const illustrationResponse = await fetch('http://localhost:3000/api/generate-image', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prompt: illustrationPrompt }),
+                    });
+                    if (!illustrationResponse.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const illustrationData = await illustrationResponse.json();
+                    if (illustrationData.imageUrl) {
+                        illustrationPreview.innerHTML = `<img src="${illustrationData.imageUrl}" alt="Illustration" class="max-w-full rounded shadow" />`;
+                    } else {
+                        illustrationPreview.textContent = currentLang === 'fr' ? 'Erreur lors de la génération de l\'illustration.' : 'Error generating illustration.';
+                    }
                 } else {
-                    aiStatus.textContent = currentLang === 'fr' ? 'Erreur lors de la génération du contenu.' : 'Error generating content.';
+                    illustrationPreview.textContent = '';
                 }
             } catch (error) {
-                console.error('Error generating AI content:', error);
-                aiStatus.textContent = currentLang === 'fr' ? 'Erreur lors de la génération du contenu.' : 'Error generating content.';
+                console.error('Error generating AI content or illustration:', error);
+                aiStatus.textContent = currentLang === 'fr' ? 'Erreur lors de la génération du contenu ou de l\'illustration.' : 'Error generating content or illustration.';
+                illustrationPreview.textContent = '';
             }
-        });
+        }
 
-        // AI Illustration Generation Button Handler
-        document.getElementById('generateIllustration').addEventListener('click', async () => {
-            const prompt = document.getElementById('illustrationPrompt').value.trim();
-            const illustrationPreview = document.getElementById('illustrationPreview');
-            if (!prompt) {
-                illustrationPreview.textContent = currentLang === 'fr' ? 'Veuillez saisir un prompt pour l\'illustration.' : 'Please enter a prompt for the illustration.';
-                return;
-            }
-            illustrationPreview.textContent = currentLang === 'fr' ? 'Génération de l\'illustration en cours...' : 'Generating illustration...';
-
-            try {
-                const response = await fetch('http://localhost:3000/api/generate-image', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt }),
-                });
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                if (data.imageUrl) {
-                    illustrationPreview.innerHTML = `<img src="${data.imageUrl}" alt="Illustration" class="max-w-full rounded shadow" />`;
-                } else {
-                    illustrationPreview.textContent = currentLang === 'fr' ? 'Erreur lors de la génération de l\'illustration.' : 'Error generating illustration.';
-                }
-            } catch (error) {
-                console.error('Error generating AI illustration:', error);
-                illustrationPreview.textContent = currentLang === 'fr' ? 'Erreur lors de la génération de l\'illustration.' : 'Error generating illustration.';
-            }
-        });
+        document.getElementById('generateAIContent').addEventListener('click', generateContentAndIllustration);
+        document.getElementById('generateIllustration').addEventListener('click', generateContentAndIllustration);
      </script>
  </body>
  </html>
