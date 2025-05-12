@@ -60,6 +60,43 @@ services:
     networks:
       - ebook_network
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ebook_grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3001:3000"
+    depends_on:
+      - prometheus
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - ebook_network
+
+  bigquery_exporter:
+    image: google/cloud-sdk:latest
+    container_name: bigquery_exporter
+    command: >
+      bash -c "
+      while true; do
+        # Placeholder for export script to BigQuery
+        echo 'Exporting metrics to BigQuery...';
+        sleep 3600;
+      done
+      "
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/credentials.json
+    volumes:
+      - ./gcp-credentials.json:/credentials.json:ro
+    depends_on:
+      - prometheus
+    networks:
+      - ebook_network
+
+volumes:
+  grafana-storage:
+
 networks:
   ebook_network:
     driver: bridge

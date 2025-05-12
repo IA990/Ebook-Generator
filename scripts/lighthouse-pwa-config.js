@@ -1,0 +1,50 @@
+module.exports = {
+  extends: 'lighthouse:default',
+  settings: {
+    throttling: {
+      rttMs: 150,
+      throughputKbps: 1600,
+      cpuSlowdownMultiplier: 4,
+      requestLatencyMs: 150,
+      downloadThroughputKbps: 1600,
+      uploadThroughputKbps: 768,
+    },
+    throttlingMethod: 'simulate',
+    onlyCategories: ['pwa'],
+    maxWaitForFcp: 2000,
+    maxWaitForLoad: 5000,
+    output: ['html', 'json'],
+    outputPath: `./reports/lighthouse/\${new Date().toISOString().slice(0,10)}`,
+    budgets: [
+      {
+        resourceSizes: [
+          { resourceType: 'script', budget: 150 * 1024 },
+          { resourceType: 'image', budget: 300 * 1024 },
+          { resourceType: 'stylesheet', budget: 50 * 1024 },
+        ],
+      },
+    ],
+    audits: [
+      'service-worker',
+      'webapp-manifest',
+      'offline-start-url',
+      'works-offline',
+      'installable-manifest',
+      'splash-screen',
+      'themed-omnibox',
+      'content-width',
+      'viewport',
+      'apple-touch-icon',
+      'redirects-http',
+      'load-fast-enough-for-pwa',
+      'uses-responsive-images',
+      'uses-text-compression',
+      'uses-rel-preconnect',
+    ],
+    thresholds: {
+      pwa: 0.9,
+      fcp: 2000,
+      tti: 5000,
+    },
+  },
+};

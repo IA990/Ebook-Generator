@@ -1,0 +1,20 @@
+{
+  "name": "ebook-generator",
+  "version": "1.0.0",
+  "description": "Ebook Generator project",
+  "main": "index.js",
+  "scripts": {
+    "preview": "serve -p 5173 -s dist",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-legacy": "^6.1.1",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "serve": "^14.2.0",
+    "tailwindcss": "^4.1.6",
+    "vite": "^6.3.5",
+    "vite-plugin-imagemin": "^0.6.1",
+    "vite-plugin-pwa": "^1.0.0"
+  }
+}

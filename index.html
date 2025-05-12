@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Ebook Generator - Landing Page</title>
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+<!-- Removed Tailwind CDN script for local Tailwind CSS setup -->
     <!-- Google Fonts: Noto Sans for multilingual support -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet" />
     <!-- Font Awesome -->
@@ -13,29 +13,31 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="frontend/manifest.json" />
     <style>
         body {
             font-family: 'Noto Sans', sans-serif;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
-    <header class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white p-6" role="banner">
+<body class="bg-white text-gray-900">
+    <header class="bg-gradient-to-r from-indigo-700 to-blue-700 text-white p-6" role="banner">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-3xl font-bold" tabindex="0">Ebook Generator</h1>
             <nav aria-label="Primary navigation">
-                <a href="app.html" class="px-4 py-2 bg-white text-indigo-600 rounded hover:bg-indigo-100 transition focus:outline-none focus:ring-2 focus:ring-indigo-500" role="link" tabindex="0">Try the App</a>
+                <a href="app.html" class="px-4 py-2 bg-white text-indigo-700 rounded hover:bg-indigo-100 transition focus:outline-none focus:ring-2 focus:ring-indigo-500" role="link" tabindex="0">Try the App</a>
             </nav>
         </div>
     </header>
 
     <main class="container mx-auto px-6 py-16 text-center" role="main">
         <h2 class="text-4xl font-extrabold mb-4" tabindex="0">Create and Sell Your Ebook Easily</h2>
-        <p class="max-w-2xl mx-auto mb-8 text-lg" tabindex="0">
+        <p class="max-w-2xl mx-auto mb-8 text-lg text-gray-800" tabindex="0">
             Generate professional-quality ebooks ready to be sold on Amazon KDP, Etsy, and other digital platforms.
             Compatible with all languages and customizable styles.
         </p>
-        <a href="app.html" class="inline-block px-8 py-4 bg-indigo-600 text-white rounded-lg text-lg font-semibold hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-500" role="link" tabindex="0">
+        <a href="app.html" class="inline-block px-8 py-4 bg-indigo-700 text-white rounded-lg text-lg font-semibold hover:bg-indigo-800 transition focus:outline-none focus:ring-2 focus:ring-indigo-500" role="link" tabindex="0">
             Get Started Now
         </a>
     </main>
@@ -43,17 +45,17 @@
     <section class="bg-white py-16">
         <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
             <div>
-                <i class="fas fa-globe-americas text-indigo-600 text-5xl mb-4" aria-hidden="true"></i>
+                <i class="fas fa-globe-americas text-indigo-700 text-5xl mb-4" aria-hidden="true"></i>
                 <h3 class="text-xl font-semibold mb-2" tabindex="0">Multilingual Support</h3>
                 <p tabindex="0">Supports all languages with Unicode fonts and easy translation.</p>
             </div>
             <div>
-                <i class="fas fa-paint-brush text-indigo-600 text-5xl mb-4" aria-hidden="true"></i>
+                <i class="fas fa-paint-brush text-indigo-700 text-5xl mb-4" aria-hidden="true"></i>
                 <h3 class="text-xl font-semibold mb-2" tabindex="0">Customizable Styles</h3>
                 <p tabindex="0">Choose fonts, colors, and layouts to match your brand and style.</p>
             </div>
             <div>
-                <i class="fas fa-file-pdf text-indigo-600 text-5xl mb-4" aria-hidden="true"></i>
+                <i class="fas fa-file-pdf text-indigo-700 text-5xl mb-4" aria-hidden="true"></i>
                 <h3 class="text-xl font-semibold mb-2" tabindex="0">Ready for Sale</h3>
                 <p tabindex="0">Generate ebooks formatted for Amazon KDP, Etsy, and other platforms.</p>
             </div>
@@ -63,5 +65,18 @@
     <footer class="bg-gray-800 text-white py-6 mt-16 text-center" role="contentinfo">
         <p tabindex="0">© 2024 Ebook Generator. All rights reserved.</p>
     </footer>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(error => {
+                    console.error('Service Worker registration failed:', error);
+                });
+            });
+        }
+    </script>
 </body>
 </html>

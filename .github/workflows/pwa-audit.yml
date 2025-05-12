@@ -1,0 +1,70 @@
+name: PWA Audit
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        device: [mobile, desktop]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Lighthouse audit
+        run: |
+          npx lighthouse http://localhost:4173 \
+            --config-path=./scripts/lighthouse-pwa-config.js \
+            --output=json,html \
+            --output-path=./reports/lighthouse/\${{ matrix.device }}-audit \
+            --chrome-flags="--headless --no-sandbox" \
+            --throttling-method=simulate \
+            --preset=\${{ matrix.device }}
+
+      - name: Upload Lighthouse reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: lighthouse-reports-\${{ matrix.device }}
+          path: ./reports/lighthouse/\${{ matrix.device }}-audit*
+
+      - name: Send Slack notification
+        if: failure()
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: 'YOUR_SLACK_CHANNEL_ID'
+          slack-message: |
+            :warning: Lighthouse PWA audit failed on \${{ matrix.device }}.
+            Please check the reports for details.
+        env:
+          SLACK_BOT_TOKEN: \${{ secrets.SLACK_BOT_TOKEN }}
+
+      - name: Append results to Google Sheets
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: \${{ secrets.GCP_CREDENTIALS }}
+      - name: Update Google Sheet with audit results
+        run: node ./scripts/update-google-sheet.js ./reports/lighthouse/\${{ matrix.device }}-audit.report.json
+
+# Example PR comment (to be implemented via a separate GitHub Action or bot):
+# "Lighthouse PWA Audit Results:
+# - Device: mobile
+# - PWA Score: 0.92 ✅
+# - FCP: 1.8s ✅
+# - TTI: 4.5s ✅
+# See full report: [link]"
