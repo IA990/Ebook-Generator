@@ -14,7 +14,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
     <!-- PWA Manifest -->
-    <link rel="manifest" href="frontend/manifest.json" />
+    <link rel="manifest" href="manifest.json" />
     <style>
         body {
             font-family: 'Noto Sans', sans-serif;
@@ -69,6 +69,58 @@
                 <p tabindex="0">Generate ebooks formatted for Amazon KDP, Etsy, and other platforms.</p>
             </div>
         </div>
+    </section>
+
+    <!-- AI Content Generation Section -->
+    <section class="bg-gray-50 py-12">
+      <div class="container mx-auto px-6 max-w-4xl">
+        <h2 class="text-3xl font-bold mb-6 text-center">Générateur de contenu AI</h2>
+        <form id="aiContentForm" class="space-y-4">
+          <div>
+            <label for="ebookType" class="block text-sm font-medium text-gray-700">Type d'ebook</label>
+            <select id="ebookType" name="ebookType" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+              <option value="practical_guide">Guide Pratique</option>
+              <option value="short_fiction">Fiction Courte</option>
+              <option value="technical_tutorial">Tutoriel Technique</option>
+              <option value="nutrition_wellness">Nutrition / Bien-être</option>
+              <option value="motivational">Motivation / Développement Personnel</option>
+            </select>
+          </div>
+          <div>
+            <label for="tone" class="block text-sm font-medium text-gray-700">Ton</label>
+            <select id="tone" name="tone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+              <option value="friendly">Amical</option>
+              <option value="informative">Informatif</option>
+              <option value="creative">Créatif</option>
+              <option value="formal">Formel</option>
+              <option value="motivational">Motivationnel</option>
+            </select>
+          </div>
+          <div>
+            <label for="style" class="block text-sm font-medium text-gray-700">Style d'écriture</label>
+            <select id="style" name="style" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+              <option value="professional">Professionnel</option>
+              <option value="simple">Simple et accessible</option>
+              <option value="technical">Technique</option>
+              <option value="narrative">Narratif / Storytelling</option>
+            </select>
+          </div>
+          <div>
+            <label for="chapterCount" class="block text-sm font-medium text-gray-700">Nombre de chapitres</label>
+            <input type="number" id="chapterCount" name="chapterCount" min="5" max="10" value="7" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label for="chapterLength" class="block text-sm font-medium text-gray-700">Longueur des chapitres (mots)</label>
+            <input type="number" id="chapterLength" name="chapterLength" min="300" max="1500" value="800" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
+          </div>
+          <div class="text-center">
+            <button type="submit" id="generateContentBtn" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+              Générer le contenu
+            </button>
+          </div>
+        </form>
+        <div id="aiContentPreview" class="mt-6 p-4 border border-gray-300 rounded-md bg-white h-64 overflow-y-auto whitespace-pre-wrap text-gray-800"></div>
+      </div>
     </section>
 
     <footer class="bg-gray-800 text-white py-6 mt-16 text-center" role="contentinfo">
