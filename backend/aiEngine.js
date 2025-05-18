@@ -1,4 +1,4 @@
-import axios from 'axios';
+const axios = require('axios');
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
@@ -6,7 +6,7 @@ if (!OPENAI_API_KEY) {
   throw new Error('OPENAI_API_KEY environment variable is required');
 }
 
-export async function generateEbookContent(prompt) {
+async function generateEbookContent(prompt) {
   try {
     const response = await axios.post(
       'https://api.openai.com/v1/chat/completions',
@@ -34,3 +34,5 @@ export async function generateEbookContent(prompt) {
     throw error;
   }
 }
+
+module.exports = { generateEbookContent };
