@@ -29,11 +29,14 @@ const EbookGenerator = () => {
     try {
       setLoading(true);
       setError('');
-      const response = await fetch('http://localhost:3000/api/generate-ebook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt }),
-      });
+      const response = await fetch(
+        'https://steadfast-eastern-fernleaf.glitch.me/api/generate-ebook',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt }),
+        }
+      );
 
       const data = await response.json();
       if (response.ok) {
