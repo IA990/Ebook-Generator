@@ -1,8 +1,8 @@
+require('dotenv').config();
+console.log('OPENAI_API_KEY loaded:', !!process.env.OPENAI_API_KEY);
+
 const fastify = require('fastify')({ logger: true });
 const formBody = require('@fastify/formbody');
-const fastifyStatic = require('@fastify/static');
-const path = require('path');
-require('dotenv').config();
 
 fastify.register(formBody);
 
@@ -10,6 +10,9 @@ fastify.register(formBody);
 fastify.register(require('@fastify/cors'), {
   origin: '*', // Tu peux restreindre à l'URL GitHub Pages ici si nécessaire
 });
+
+// Log to confirm OPENAI_API_KEY is loaded
+console.log('OPENAI_API_KEY loaded:', !!process.env.OPENAI_API_KEY);
 
 // Route principale pour tester
 fastify.get('/', async (request, reply) => {
@@ -43,7 +46,7 @@ fastify.post('/api/generate-ebook', async (request, reply) => {
     const generated = aiResponse.data.choices[0].message.content.trim();
     reply.send({ content: generated });
   } catch (err) {
-    console.error(err);
+    console.error('OpenAI API error:', err.response?.data ?? err.message ?? err);
     reply.code(500).send({ error: 'Erreur lors de la génération du contenu AI.' });
   }
 });
@@ -52,7 +55,7 @@ fastify.post('/api/generate-ebook', async (request, reply) => {
 const start = async () => {
   try {
     await fastify.listen({ port: process.env.PORT || 3000, host: '0.0.0.0' });
-    fastify.log.info(`Serveur lancé sur http://localhost:${fastify.server.address().port}`);
+    fastify.log.info(`Serveur lancé.`);
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
